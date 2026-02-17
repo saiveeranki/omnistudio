@@ -221,10 +221,13 @@ const App: React.FC = () => {
     <div className="flex h-screen w-full overflow-hidden bg-white selection:bg-[#ff4b4b]/30">
       {/* Sidebar */}
       <StSidebar>
-        <div className="mb-10 flex flex-col items-center text-center">
-          <img src="./logo.svg" alt="OmniStudio Logo" className="w-20 h-20 mb-4 shadow-xl rounded-2xl" />
-          <h1 className="text-2xl font-bold text-[#31333f]">OmniStudio</h1>
-          <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-[0.2em] mt-1">Multimodal Core</p>
+        <div className="mb-10 flex flex-col items-center text-center group">
+          <div className="relative">
+            <img src="./logo.svg" alt="OmniStudio Logo" className="w-24 h-24 mb-4 shadow-2xl rounded-[30px] transition-transform duration-500 group-hover:scale-105" />
+            <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-[#ff4b4b] rounded-full border-4 border-[#f0f2f6] animate-pulse"></div>
+          </div>
+          <h1 className="text-2xl font-bold text-[#31333f] tracking-tight">OmniStudio</h1>
+          <p className="text-[10px] text-[#ff4b4b] font-black uppercase tracking-[0.3em] mt-1.5 opacity-80">Intelligence Core</p>
         </div>
 
         <StSelect 
@@ -260,13 +263,13 @@ const App: React.FC = () => {
         <div className="mt-auto space-y-3 pt-6 border-t border-[#e6eaf1]">
           {modelProvider.includes('Local') && (
             <div className="bg-[#e7f4ff] p-3 rounded text-[10px] text-[#0068c9] font-medium leading-relaxed border border-[#0068c9]/10">
-              <i className="fas fa-plug mr-1"></i>
-              Local endpoint: <strong>localhost:11434</strong>
+              <i className="fas fa-bolt mr-1"></i>
+              Local host active: <strong>11434</strong>
             </div>
           )}
-          <StButton label="Reset All Sessions" onClick={() => setMessages([])} />
+          <StButton label="Clear Chat History" onClick={() => setMessages([])} />
           <div className="text-[9px] text-zinc-400 text-center uppercase tracking-widest font-bold pt-2">
-            PRO EDITION v2.0
+            V2.1 GEN-AI READY
           </div>
         </div>
       </StSidebar>
@@ -274,35 +277,35 @@ const App: React.FC = () => {
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col bg-white overflow-hidden relative">
         <div className="px-12 pt-6 border-b border-[#e6eaf1] flex space-x-4 bg-white/95 backdrop-blur-sm sticky top-0 z-10">
-          <StTab label="Text Synthesis" active={activeTab === MediaType.TEXT} onClick={() => setActiveTab(MediaType.TEXT)} />
-          <StTab label="Image Generation" active={activeTab === MediaType.IMAGE} onClick={() => setActiveTab(MediaType.IMAGE)} />
-          <StTab label="Video Production" active={activeTab === MediaType.VIDEO} onClick={() => setActiveTab(MediaType.VIDEO)} />
+          <StTab label="Text Chat" active={activeTab === MediaType.TEXT} onClick={() => setActiveTab(MediaType.TEXT)} />
+          <StTab label="Image Gen" active={activeTab === MediaType.IMAGE} onClick={() => setActiveTab(MediaType.IMAGE)} />
+          <StTab label="Video Studio" active={activeTab === MediaType.VIDEO} onClick={() => setActiveTab(MediaType.VIDEO)} />
         </div>
 
         <div className="flex-1 overflow-y-auto px-12 py-10 space-y-12 max-w-[900px] mx-auto w-full pb-48">
           {messages.length === 0 && (
-            <div className="space-y-6 animate-in fade-in duration-700">
-              <div className="flex items-center space-x-6 mb-8">
-                <img src="./logo.svg" className="w-16 h-16" alt="Logo" />
+            <div className="space-y-6 animate-in fade-in slide-in-from-top-4 duration-700">
+              <div className="flex items-center space-x-6 mb-10">
+                <img src="./logo.svg" className="w-20 h-20 rounded-3xl shadow-xl" alt="Logo" />
                 <div>
-                  <h1 className="text-4xl font-bold text-[#31333f]">OmniStudio Workspace</h1>
-                  <p className="text-[#31333f]/70 text-lg mt-1">Unified Local & Cloud Intelligence.</p>
+                  <h1 className="text-4xl font-extrabold text-[#31333f] tracking-tight">Studio Workspace</h1>
+                  <p className="text-[#31333f]/60 text-lg mt-1 font-medium">Your multimodal AI hub is ready.</p>
                 </div>
               </div>
               
               <StAlert type="info">
-                <strong>Ready to Generate:</strong> {modelProvider} is active. 
-                {modelProvider.includes('Local') ? ' Privacy-first compute.' : ' Cloud-scale creativity enabled.'}
+                <strong>Session Started:</strong> Using {modelProvider} as primary engine. 
+                {modelProvider.includes('Local') ? ' Local inference enabled.' : ' Cloud-scale creativity is at your fingertips.'}
               </StAlert>
 
               <div className="grid grid-cols-2 gap-4 mt-8">
-                <div className="p-6 bg-[#f0f2f6] rounded-xl border-2 border-transparent hover:border-[#ff4b4b]/40 cursor-pointer transition-all group" onClick={() => setInput("Explain quantum entanglement like I'm five.")}>
-                  <p className="text-sm font-bold text-[#31333f] group-hover:text-[#ff4b4b]">Knowledge Retrieval</p>
-                  <p className="text-xs text-zinc-500 mt-1">Perfect for local Llama3 or Mistral models.</p>
+                <div className="p-6 bg-[#f0f2f6] rounded-2xl border-2 border-transparent hover:border-[#ff4b4b]/40 cursor-pointer transition-all group shadow-sm hover:shadow-md" onClick={() => setInput("Plan a 3-day itinerary for a photography trip to Iceland.")}>
+                  <p className="text-sm font-bold text-[#31333f] group-hover:text-[#ff4b4b]">Strategic Planning</p>
+                  <p className="text-xs text-zinc-500 mt-1">Ideal for reasoning with local {selectedModel}.</p>
                 </div>
-                <div className="p-6 bg-[#f0f2f6] rounded-xl border-2 border-transparent hover:border-[#ff4b4b]/40 cursor-pointer transition-all group" onClick={() => { setActiveTab(MediaType.IMAGE); setInput("A futuristic greenhouse on Mars with neon bioluminescent plants, cinematic lighting."); }}>
-                  <p className="text-sm font-bold text-[#31333f] group-hover:text-[#ff4b4b]">Visual Discovery</p>
-                  <p className="text-xs text-zinc-500 mt-1">Leverage Gemini's high-fidelity image engine.</p>
+                <div className="p-6 bg-[#f0f2f6] rounded-2xl border-2 border-transparent hover:border-[#ff4b4b]/40 cursor-pointer transition-all group shadow-sm hover:shadow-md" onClick={() => { setActiveTab(MediaType.IMAGE); setInput("A futuristic Japanese garden inside a glass dome on a moon base, digital art style."); }}>
+                  <p className="text-sm font-bold text-[#31333f] group-hover:text-[#ff4b4b]">Artistic Creation</p>
+                  <p className="text-xs text-zinc-500 mt-1">Generate high-fidelity visuals via Cloud Engine.</p>
                 </div>
               </div>
             </div>
@@ -311,57 +314,57 @@ const App: React.FC = () => {
           {messages.map((msg) => (
             <div key={msg.id} className="space-y-4 animate-in slide-in-from-bottom-2 duration-300">
               <div className="flex items-start space-x-5">
-                <div className={`w-8 h-8 rounded-lg shrink-0 flex items-center justify-center font-bold text-[10px] shadow-sm ${
+                <div className={`w-9 h-9 rounded-xl shrink-0 flex items-center justify-center font-bold text-[10px] shadow-sm ${
                   msg.role === 'user' ? 'bg-[#ff4b4b] text-white' : 'bg-[#31333f] text-white'
                 }`}>
                   {msg.role === 'user' ? 'USR' : 'AI'}
                 </div>
-                <div className="flex-1 pt-1">
-                  <div className="text-[#31333f] text-sm leading-relaxed whitespace-pre-wrap">
+                <div className="flex-1 pt-1.5">
+                  <div className="text-[#31333f] text-[15px] leading-relaxed whitespace-pre-wrap font-medium">
                     {msg.content}
                   </div>
                 </div>
               </div>
 
               {msg.mediaItems?.map((item) => (
-                <div key={item.id} className="ml-[52px] mt-6 bg-[#f0f2f6] border border-[#e6eaf1] rounded-2xl overflow-hidden shadow-sm">
+                <div key={item.id} className="ml-[56px] mt-6 bg-[#f0f2f6] border border-[#e6eaf1] rounded-3xl overflow-hidden shadow-lg transition-all hover:shadow-xl">
                   {item.status === 'pending' ? (
-                    <div className="flex flex-col items-center py-20 bg-white">
-                      <div className="w-48 h-1.5 bg-zinc-100 rounded-full overflow-hidden mb-4">
+                    <div className="flex flex-col items-center py-24 bg-white">
+                      <div className="w-56 h-1.5 bg-zinc-100 rounded-full overflow-hidden mb-6">
                         <div className="h-full bg-[#ff4b4b] animate-st-progress"></div>
                       </div>
-                      <p className="text-[10px] font-black text-[#31333f]/40 uppercase tracking-[0.2em]">Synthesizing {item.type}...</p>
+                      <p className="text-[10px] font-black text-[#31333f]/30 uppercase tracking-[0.3em]">Synthesizing {item.type}...</p>
                     </div>
                   ) : item.type === MediaType.IMAGE ? (
-                    <img src={item.content} alt={item.prompt} className="w-full bg-white" />
+                    <img src={item.content} alt={item.prompt} className="w-full bg-white object-contain max-h-[600px]" />
                   ) : item.type === MediaType.VIDEO ? (
                     <video src={item.content} controls className="w-full bg-black" autoPlay loop />
                   ) : null}
-                  <div className="px-6 py-3 flex items-center justify-between bg-white border-t border-[#e6eaf1]">
-                    <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-tighter">RENDER_ID: {item.id.slice(-6)}</span>
-                    <button className="text-[10px] font-bold text-[#ff4b4b] uppercase hover:underline flex items-center"
+                  <div className="px-8 py-4 flex items-center justify-between bg-white border-t border-[#e6eaf1]">
+                    <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-widest">ASSET_ID_{item.id.slice(-6)}</span>
+                    <button className="text-[11px] font-black text-[#ff4b4b] uppercase hover:underline flex items-center tracking-tight"
                       onClick={() => {
                         const a = document.createElement('a');
                         a.href = item.content;
-                        a.download = `omni-${item.id}.png`;
+                        a.download = `omnistudio-${item.id}.png`;
                         a.click();
                       }}>
-                      <i className="fas fa-download mr-1.5"></i> Export Asset
+                      <i className="fas fa-cloud-download-alt mr-2"></i> Export Content
                     </button>
                   </div>
                 </div>
               ))}
               
-              <div className="h-px bg-[#f0f2f6] w-full mt-10"></div>
+              <div className="h-px bg-[#f0f2f6] w-full mt-12"></div>
             </div>
           ))}
           <div ref={chatEndRef} />
         </div>
 
-        {/* Chat Input */}
+        {/* Chat Input Container */}
         <div className="absolute bottom-0 left-0 right-0 p-12 bg-gradient-to-t from-white via-white to-transparent pointer-events-none">
           <div className="max-w-[900px] mx-auto pointer-events-auto">
-            <div className="bg-white border-2 border-[#d1d5db] rounded-2xl shadow-2xl overflow-hidden focus-within:border-[#ff4b4b] transition-all flex items-end">
+            <div className="bg-white border-2 border-[#d1d5db] rounded-[24px] shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden focus-within:border-[#ff4b4b] focus-within:ring-4 focus-within:ring-[#ff4b4b]/5 transition-all flex items-end group">
               <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -372,24 +375,24 @@ const App: React.FC = () => {
                   }
                 }}
                 placeholder={
-                  activeTab === MediaType.TEXT ? `Message ${selectedModel}...` : 
-                  `Prompt for ${activeTab.toLowerCase()} generation...`
+                  activeTab === MediaType.TEXT ? `Ask ${selectedModel} anything...` : 
+                  `Describe the ${activeTab.toLowerCase()} you want to create...`
                 }
-                className="flex-1 bg-transparent border-none focus:ring-0 text-sm py-5 px-6 resize-none max-h-48 text-[#31333f] placeholder:text-[#31333f]/30"
+                className="flex-1 bg-transparent border-none focus:ring-0 text-[15px] py-6 px-8 resize-none max-h-48 text-[#31333f] placeholder:text-[#31333f]/30 font-medium"
                 rows={1}
               />
               <div className="p-4">
                 <button
                   onClick={handleExecute}
                   disabled={!input.trim() || isGenerating}
-                  className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all shadow-md ${
-                    !input.trim() || isGenerating ? 'bg-zinc-100 text-zinc-300' : 'bg-[#ff4b4b] text-white hover:bg-[#e63939] active:scale-90'
+                  className={`w-14 h-14 flex items-center justify-center rounded-2xl transition-all shadow-lg ${
+                    !input.trim() || isGenerating ? 'bg-zinc-100 text-zinc-300' : 'bg-[#ff4b4b] text-white hover:bg-[#e63939] active:scale-95'
                   }`}
                 >
                   {isGenerating ? (
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                   ) : (
-                    <i className="fas fa-paper-plane text-lg"></i>
+                    <i className="fas fa-sparkles text-xl"></i>
                   )}
                 </button>
               </div>
@@ -405,7 +408,7 @@ const App: React.FC = () => {
         }
         .animate-st-progress {
           width: 50%;
-          animation: st-progress 1.5s infinite ease-in-out;
+          animation: st-progress 1.5s infinite cubic-bezier(0.65, 0, 0.35, 1);
         }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

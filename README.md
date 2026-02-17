@@ -7,7 +7,7 @@ A professional-grade multimodal interface built to bridge local compute power (*
 ---
 
 ## 🎨 Branding
-The **OmniStudio** logo represents the fusion of three core modalities (Text, Image, Video) within a unified "Creative Box" (Hexagon). It utilizes the **Streamlit Red (#FF4B4B)** to signify speed and creativity.
+The **OmniStudio** logo features the **"Magic Chat"** icon—a fusion of a conversational bubble, a generative sparkle (AI), and a lens (Vision/Multimodal). It uses the **Streamlit Red (#FF4B4B)** and **Charcoal (#31333F)** palette to convey a balance of creativity and high-performance engineering.
 
 ---
 
