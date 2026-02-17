@@ -1,17 +1,32 @@
-
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background Container -->
-  <rect width="512" height="512" rx="110" fill="#31333F"/>
+  <defs>
+    <linearGradient id="orbit_grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF4B4B" />
+      <stop offset="100%" stop-color="#6366F1" />
+    </linearGradient>
+    <filter id="neon_glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
   
-  <!-- Main Chat Bubble -->
-  <path d="M140 160C140 137.909 157.909 120 180 120H332C354.091 120 372 137.909 372 160V280C372 302.091 354.091 320 332 320H240L160 380V320H180C157.909 320 140 302.091 140 280V160Z" fill="#FF4B4B"/>
+  <!-- Premium Dark Container -->
+  <rect width="512" height="512" rx="140" fill="#0E1117"/>
   
-  <!-- Central Magic Sparkle (AI Symbol) -->
-  <path d="M256 180C256 210 240 236 210 236C240 236 256 262 256 292C256 262 272 236 302 236C272 236 256 210 256 180Z" fill="white"/>
+  <!-- Outer Multimodal Orbit (Video/Motion) -->
+  <circle cx="256" cy="256" r="160" stroke="#FF4B4B" stroke-width="28" stroke-linecap="round" stroke-dasharray="600 400" transform="rotate(-45 256 256)" opacity="0.9" />
   
-  <!-- Secondary Sparkle -->
-  <path d="M310 160C310 175 302 188 287 188C302 188 310 201 310 216C310 201 318 188 333 188C318 188 310 175 310 160Z" fill="white" opacity="0.8"/>
+  <!-- Middle Multimodal Orbit (Image/Vision) -->
+  <circle cx="256" cy="256" r="115" stroke="#00D4FF" stroke-width="22" stroke-linecap="round" stroke-dasharray="400 300" transform="rotate(120 256 256)" opacity="0.8" />
   
-  <!-- Multimodal Lens (O for Omni) -->
-  <circle cx="210" cy="180" r="25" stroke="white" stroke-width="8" opacity="0.6"/>
+  <!-- Inner Logic Orbit (Text/Chat) -->
+  <circle cx="256" cy="256" r="75" stroke="white" stroke-width="16" stroke-linecap="round" stroke-dasharray="300 150" transform="rotate(-90 256 256)" />
+  
+  <!-- The Nexus Spark (Core AI) -->
+  <g filter="url(#neon_glow)">
+    <path d="M256 190C256 230 230 256 190 256C230 256 256 282 256 322C256 282 282 256 322 256C282 256 256 230 256 190Z" fill="white" />
+  </g>
+  
+  <!-- Subtle Ambient Glow -->
+  <circle cx="256" cy="256" r="40" fill="white" opacity="0.1" />
 </svg>

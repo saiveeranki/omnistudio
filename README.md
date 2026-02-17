@@ -7,7 +7,7 @@ A professional-grade multimodal interface built to bridge local compute power (*
 ---
 
 ## 🎨 Branding
-The **OmniStudio** logo features the **"Magic Chat"** icon—a fusion of a conversational bubble, a generative sparkle (AI), and a lens (Vision/Multimodal). It uses the **Streamlit Red (#FF4B4B)** and **Charcoal (#31333F)** palette to convey a balance of creativity and high-performance engineering.
+The **OmniStudio** logo features the **"Neural Spark"**—a core emblem representing the synthesis of Text, Image, and Video through a unified AI nexus. The design uses high-contrast gradients of **Streamlit Red (#FF4B4B)** and **Cyan (#00D4FF)** against a deep charcoal canvas to emphasize its cutting-edge multimodal capabilities.
 
 ---
 
