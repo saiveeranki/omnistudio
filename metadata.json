@@ -1,0 +1,8 @@
+{
+  "name": "OmniStudio Multimodal",
+  "description": "A powerful workstation for generating text, high-fidelity images, and cinematic videos using Gemini and Veo models. Featuring a sleek, professional interface with real-time generation previews.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
