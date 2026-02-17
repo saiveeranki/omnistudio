@@ -100,7 +100,6 @@ const App: React.FC = () => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Update models when provider changes
   useEffect(() => {
     if (modelProvider.includes('Local')) {
       setSelectedModel('llama3');
@@ -137,13 +136,13 @@ const App: React.FC = () => {
       } 
       else if (activeTab === MediaType.IMAGE) {
         if (modelProvider.includes('Local')) {
-          throw new Error("Local Image Generation is not supported in this build. Please switch 'Model Provider' to Cloud for Visual tasks.");
+          throw new Error("Local Image Generation is not supported. Please switch to Cloud Provider.");
         }
         const imageUrl = await ModelService.generateImage(currentInput, aspectRatio as any);
         const assistantMsg: ChatMessage = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: `Image generated using Cloud Synthesis. Result for: "${currentInput}"`,
+          content: `Image generated for: "${currentInput}"`,
           mediaItems: [{
             id: Date.now().toString(),
             type: MediaType.IMAGE,
@@ -159,7 +158,7 @@ const App: React.FC = () => {
       }
       else if (activeTab === MediaType.VIDEO) {
         if (modelProvider.includes('Local')) {
-          throw new Error("Local Video Generation is not supported. Please switch to Cloud (Gemini/Veo).");
+          throw new Error("Local Video Generation is not supported.");
         }
         // @ts-ignore
         const hasKey = await window.aistudio.hasSelectedApiKey();
@@ -172,7 +171,7 @@ const App: React.FC = () => {
         const assistantMsg: ChatMessage = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: '🎬 Veo Video sequence started. Rendering from Cloud Compute...',
+          content: '🎬 Video generation initiated. Processing in the cloud...',
           mediaItems: [{
             id: Date.now().toString(),
             type: MediaType.VIDEO,
@@ -191,7 +190,7 @@ const App: React.FC = () => {
       const errorMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: `⚠️ System Exception: ${error instanceof Error ? error.message : 'Unknown error.'}`,
+        content: `⚠️ System Error: ${error instanceof Error ? error.message : 'An error occurred.'}`,
         timestamp: Date.now()
       };
       setMessages(prev => [...prev, errorMsg]);
@@ -220,16 +219,12 @@ const App: React.FC = () => {
 
   return (
     <div className="flex h-screen w-full overflow-hidden bg-white selection:bg-[#ff4b4b]/30">
-      {/* Streamlit Sidebar */}
+      {/* Sidebar */}
       <StSidebar>
-        <div className="mb-8">
-          <div className="flex items-center space-x-2 mb-2">
-            <div className="w-8 h-8 bg-[#ff4b4b] rounded flex items-center justify-center">
-              <i className="fas fa-cube text-white text-xs"></i>
-            </div>
-            <h1 className="text-xl font-bold text-[#31333f]">OmniStudio</h1>
-          </div>
-          <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-[0.15em]">Unified Multimodal Interface</p>
+        <div className="mb-10 flex flex-col items-center text-center">
+          <img src="./logo.svg" alt="OmniStudio Logo" className="w-20 h-20 mb-4 shadow-xl rounded-2xl" />
+          <h1 className="text-2xl font-bold text-[#31333f]">OmniStudio</h1>
+          <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-[0.2em] mt-1">Multimodal Core</p>
         </div>
 
         <StSelect 
@@ -264,91 +259,94 @@ const App: React.FC = () => {
 
         <div className="mt-auto space-y-3 pt-6 border-t border-[#e6eaf1]">
           {modelProvider.includes('Local') && (
-            <div className="bg-blue-50 p-3 rounded text-[10px] text-[#0068c9] font-medium leading-relaxed">
-              <i className="fas fa-info-circle mr-1"></i>
-              Ensure Ollama is running with OLLAMA_ORIGINS="http://localhost:*"
+            <div className="bg-[#e7f4ff] p-3 rounded text-[10px] text-[#0068c9] font-medium leading-relaxed border border-[#0068c9]/10">
+              <i className="fas fa-plug mr-1"></i>
+              Local endpoint: <strong>localhost:11434</strong>
             </div>
           )}
-          <StButton label="Reset Workspace" onClick={() => setMessages([])} />
-          <div className="text-[9px] text-zinc-400 text-center uppercase tracking-widest font-bold">
-            BUILD 4.5.12-R | STREAMLIT CORE
+          <StButton label="Reset All Sessions" onClick={() => setMessages([])} />
+          <div className="text-[9px] text-zinc-400 text-center uppercase tracking-widest font-bold pt-2">
+            PRO EDITION v2.0
           </div>
         </div>
       </StSidebar>
 
-      {/* Main Streamlit App Area */}
+      {/* Main Content Area */}
       <main className="flex-1 flex flex-col bg-white overflow-hidden relative">
-        {/* Streamlit Tabs Navigation */}
-        <div className="px-12 pt-6 border-b border-[#e6eaf1] flex space-x-4 bg-white/95 backdrop-blur-sm sticky top-0 z-10 overflow-x-auto no-scrollbar">
-          <StTab label="Text Logic" active={activeTab === MediaType.TEXT} onClick={() => setActiveTab(MediaType.TEXT)} />
-          <StTab label="Image Gen" active={activeTab === MediaType.IMAGE} onClick={() => setActiveTab(MediaType.IMAGE)} />
-          <StTab label="Video Motion" active={activeTab === MediaType.VIDEO} onClick={() => setActiveTab(MediaType.VIDEO)} />
+        <div className="px-12 pt-6 border-b border-[#e6eaf1] flex space-x-4 bg-white/95 backdrop-blur-sm sticky top-0 z-10">
+          <StTab label="Text Synthesis" active={activeTab === MediaType.TEXT} onClick={() => setActiveTab(MediaType.TEXT)} />
+          <StTab label="Image Generation" active={activeTab === MediaType.IMAGE} onClick={() => setActiveTab(MediaType.IMAGE)} />
+          <StTab label="Video Production" active={activeTab === MediaType.VIDEO} onClick={() => setActiveTab(MediaType.VIDEO)} />
         </div>
 
-        {/* Content Flow */}
         <div className="flex-1 overflow-y-auto px-12 py-10 space-y-12 max-w-[900px] mx-auto w-full pb-48">
           {messages.length === 0 && (
-            <div className="space-y-6">
-              <h1 className="text-4xl font-bold text-[#31333f]">Welcome to OmniStudio</h1>
-              <p className="text-[#31333f]/70 text-lg leading-relaxed">
-                A high-performance multimodal workspace that bridges local compute power with cloud-scale creative engines.
-              </p>
+            <div className="space-y-6 animate-in fade-in duration-700">
+              <div className="flex items-center space-x-6 mb-8">
+                <img src="./logo.svg" className="w-16 h-16" alt="Logo" />
+                <div>
+                  <h1 className="text-4xl font-bold text-[#31333f]">OmniStudio Workspace</h1>
+                  <p className="text-[#31333f]/70 text-lg mt-1">Unified Local & Cloud Intelligence.</p>
+                </div>
+              </div>
               
               <StAlert type="info">
-                <strong>Current Configuration:</strong> {modelProvider} is active using the {selectedModel} model. 
-                {modelProvider.includes('Local') ? ' Your data stays on this machine.' : ' Cloud processing enables high-fidelity media synthesis.'}
+                <strong>Ready to Generate:</strong> {modelProvider} is active. 
+                {modelProvider.includes('Local') ? ' Privacy-first compute.' : ' Cloud-scale creativity enabled.'}
               </StAlert>
 
               <div className="grid grid-cols-2 gap-4 mt-8">
-                <div className="p-6 bg-[#f0f2f6] rounded-xl border border-transparent hover:border-[#ff4b4b]/30 cursor-pointer transition-all" onClick={() => setInput("Write a python script to analyze a CSV and plot a graph.")}>
-                  <p className="text-sm font-bold text-[#31333f] mb-1">Code Assistant</p>
-                  <p className="text-xs text-zinc-500">Perfect for local {selectedModel} models.</p>
+                <div className="p-6 bg-[#f0f2f6] rounded-xl border-2 border-transparent hover:border-[#ff4b4b]/40 cursor-pointer transition-all group" onClick={() => setInput("Explain quantum entanglement like I'm five.")}>
+                  <p className="text-sm font-bold text-[#31333f] group-hover:text-[#ff4b4b]">Knowledge Retrieval</p>
+                  <p className="text-xs text-zinc-500 mt-1">Perfect for local Llama3 or Mistral models.</p>
                 </div>
-                <div className="p-6 bg-[#f0f2f6] rounded-xl border border-transparent hover:border-[#ff4b4b]/30 cursor-pointer transition-all" onClick={() => { setActiveTab(MediaType.IMAGE); setInput("A cinematic portrait of a cybernetic owl, neon lighting, dark background, 8k"); }}>
-                  <p className="text-sm font-bold text-[#31333f] mb-1">Creative Visuals</p>
-                  <p className="text-xs text-zinc-500">Requires Cloud Engine toggle.</p>
+                <div className="p-6 bg-[#f0f2f6] rounded-xl border-2 border-transparent hover:border-[#ff4b4b]/40 cursor-pointer transition-all group" onClick={() => { setActiveTab(MediaType.IMAGE); setInput("A futuristic greenhouse on Mars with neon bioluminescent plants, cinematic lighting."); }}>
+                  <p className="text-sm font-bold text-[#31333f] group-hover:text-[#ff4b4b]">Visual Discovery</p>
+                  <p className="text-xs text-zinc-500 mt-1">Leverage Gemini's high-fidelity image engine.</p>
                 </div>
               </div>
             </div>
           )}
 
           {messages.map((msg) => (
-            <div key={msg.id} className="space-y-4">
+            <div key={msg.id} className="space-y-4 animate-in slide-in-from-bottom-2 duration-300">
               <div className="flex items-start space-x-5">
-                <div className={`w-8 h-8 rounded shrink-0 flex items-center justify-center font-bold text-[10px] shadow-sm ${
+                <div className={`w-8 h-8 rounded-lg shrink-0 flex items-center justify-center font-bold text-[10px] shadow-sm ${
                   msg.role === 'user' ? 'bg-[#ff4b4b] text-white' : 'bg-[#31333f] text-white'
                 }`}>
                   {msg.role === 'user' ? 'USR' : 'AI'}
                 </div>
                 <div className="flex-1 pt-1">
-                  <div className="text-[#31333f] text-sm leading-relaxed whitespace-pre-wrap font-normal">
+                  <div className="text-[#31333f] text-sm leading-relaxed whitespace-pre-wrap">
                     {msg.content}
                   </div>
                 </div>
               </div>
 
               {msg.mediaItems?.map((item) => (
-                <div key={item.id} className="ml-[52px] mt-6 bg-[#f0f2f6]/50 border border-[#e6eaf1] rounded-2xl p-2 shadow-sm overflow-hidden">
+                <div key={item.id} className="ml-[52px] mt-6 bg-[#f0f2f6] border border-[#e6eaf1] rounded-2xl overflow-hidden shadow-sm">
                   {item.status === 'pending' ? (
-                    <div className="flex flex-col items-center py-20 bg-white rounded-xl">
-                      <div className="w-48 h-1 bg-[#f0f2f6] rounded-full overflow-hidden mb-4">
+                    <div className="flex flex-col items-center py-20 bg-white">
+                      <div className="w-48 h-1.5 bg-zinc-100 rounded-full overflow-hidden mb-4">
                         <div className="h-full bg-[#ff4b4b] animate-st-progress"></div>
                       </div>
-                      <p className="text-[10px] font-black text-[#31333f]/40 uppercase tracking-widest">Processing {item.type} via {modelProvider}...</p>
+                      <p className="text-[10px] font-black text-[#31333f]/40 uppercase tracking-[0.2em]">Synthesizing {item.type}...</p>
                     </div>
                   ) : item.type === MediaType.IMAGE ? (
-                    <div className="bg-white rounded-xl overflow-hidden p-2">
-                      <img src={item.content} alt={item.prompt} className="w-full rounded-lg" />
-                    </div>
+                    <img src={item.content} alt={item.prompt} className="w-full bg-white" />
                   ) : item.type === MediaType.VIDEO ? (
-                    <div className="bg-black rounded-xl overflow-hidden">
-                      <video src={item.content} controls className="w-full" autoPlay loop />
-                    </div>
+                    <video src={item.content} controls className="w-full bg-black" autoPlay loop />
                   ) : null}
-                  <div className="px-4 py-3 flex items-center justify-between bg-transparent">
-                    <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-tighter">RENDER_ID: {item.id.slice(-8)}</span>
-                    <button className="text-[10px] font-bold text-[#ff4b4b] uppercase hover:underline">
-                      <i className="fas fa-file-export mr-1"></i> Save Asset
+                  <div className="px-6 py-3 flex items-center justify-between bg-white border-t border-[#e6eaf1]">
+                    <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-tighter">RENDER_ID: {item.id.slice(-6)}</span>
+                    <button className="text-[10px] font-bold text-[#ff4b4b] uppercase hover:underline flex items-center"
+                      onClick={() => {
+                        const a = document.createElement('a');
+                        a.href = item.content;
+                        a.download = `omni-${item.id}.png`;
+                        a.click();
+                      }}>
+                      <i className="fas fa-download mr-1.5"></i> Export Asset
                     </button>
                   </div>
                 </div>
@@ -360,10 +358,10 @@ const App: React.FC = () => {
           <div ref={chatEndRef} />
         </div>
 
-        {/* Streamlit Chat Input Widget */}
+        {/* Chat Input */}
         <div className="absolute bottom-0 left-0 right-0 p-12 bg-gradient-to-t from-white via-white to-transparent pointer-events-none">
           <div className="max-w-[900px] mx-auto pointer-events-auto">
-            <div className="bg-white border border-[#d1d5db] rounded-xl shadow-2xl overflow-hidden focus-within:ring-2 focus-within:ring-[#ff4b4b]/20 focus-within:border-[#ff4b4b] transition-all flex items-end">
+            <div className="bg-white border-2 border-[#d1d5db] rounded-2xl shadow-2xl overflow-hidden focus-within:border-[#ff4b4b] transition-all flex items-end">
               <textarea
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -374,31 +372,28 @@ const App: React.FC = () => {
                   }
                 }}
                 placeholder={
-                  activeTab === MediaType.TEXT ? `Type a message to ${selectedModel}...` : 
-                  `Describe the ${activeTab.toLowerCase()} content to generate...`
+                  activeTab === MediaType.TEXT ? `Message ${selectedModel}...` : 
+                  `Prompt for ${activeTab.toLowerCase()} generation...`
                 }
-                className="flex-1 bg-transparent border-none focus:ring-0 text-sm py-4 px-6 resize-none max-h-48 text-[#31333f] placeholder:text-[#31333f]/30"
+                className="flex-1 bg-transparent border-none focus:ring-0 text-sm py-5 px-6 resize-none max-h-48 text-[#31333f] placeholder:text-[#31333f]/30"
                 rows={1}
               />
-              <div className="p-3">
+              <div className="p-4">
                 <button
                   onClick={handleExecute}
                   disabled={!input.trim() || isGenerating}
-                  className={`w-10 h-10 flex items-center justify-center rounded-lg transition-all ${
-                    !input.trim() || isGenerating ? 'bg-zinc-100 text-zinc-300' : 'bg-[#ff4b4b] text-white hover:bg-[#e63939]'
+                  className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all shadow-md ${
+                    !input.trim() || isGenerating ? 'bg-zinc-100 text-zinc-300' : 'bg-[#ff4b4b] text-white hover:bg-[#e63939] active:scale-90'
                   }`}
                 >
                   {isGenerating ? (
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                   ) : (
-                    <i className="fas fa-paper-plane text-sm"></i>
+                    <i className="fas fa-paper-plane text-lg"></i>
                   )}
                 </button>
               </div>
             </div>
-            <p className="mt-4 text-[9px] text-center text-[#31333f]/40 font-bold uppercase tracking-widest">
-              Powered by {modelProvider} Engine 2025
-            </p>
           </div>
         </div>
       </main>
@@ -409,16 +404,11 @@ const App: React.FC = () => {
           100% { transform: translateX(100%); }
         }
         .animate-st-progress {
-          width: 40%;
-          animation: st-progress 1.2s infinite linear;
+          width: 50%;
+          animation: st-progress 1.5s infinite ease-in-out;
         }
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
     </div>
   );
